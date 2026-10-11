@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#087e55">
+<meta name="description" content="MintPocket fictional banking demo. No real money or bank connection.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png" type="image/png">
+
+<title>MintPocket — Banking Demo</title>
+<style>
+:root{--green:#087e55;--dark:#073d30;--mint:#e8f7ef;--bg:#f4f7f5;--text:#17231e;--muted:#718078;--line:#e4ebe7}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
+.demo{background:#fff2cc;color:#664900;text-align:center;padding:9px 12px;font-weight:800;font-size:12px;letter-spacing:.5px;position:sticky;top:0;z-index:5;border-bottom:1px solid #f0dfa4}
+.wrap{max-width:460px;margin:auto;min-height:100vh;background:#fff;padding-bottom:84px;box-shadow:0 0 30px #10291a0c}
+header{padding:20px 20px 12px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;gap:10px;align-items:center;font-size:19px;font-weight:800;letter-spacing:-.5px}.mark{width:38px;height:38px;border-radius:13px;background:var(--green);color:white;display:grid;place-items:center;font-weight:900;font-size:20px}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--mint);color:var(--dark);display:grid;place-items:center;font-weight:800}
+main{padding:10px 18px}.eyebrow{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.7px;text-transform:uppercase}
+h1{font-size:30px;letter-spacing:-1px;margin:8px 0 4px}.sub{color:var(--muted);font-size:13px}
+.balance{background:linear-gradient(135deg,#087e55,#075b42);color:#fff;border-radius:24px;padding:22px;margin:22px 0 18px;position:relative;overflow:hidden}
+.balance:after{content:"";position:absolute;width:190px;height:190px;border:1px solid #ffffff20;border-radius:50%;right:-60px;top:-70px;box-shadow:0 0 0 24px #ffffff08,0 0 0 48px #ffffff05}
+.balance .label{font-size:13px;color:#d3f3e2}.amount{font-size:38px;font-weight:800;letter-spacing:-1.5px;margin:10px 0 8px}.balancefoot{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#d3f3e2}
+.pill{border:1px solid #ffffff66;border-radius:30px;padding:6px 9px;font-size:10px;font-weight:800;letter-spacing:.5px}
+.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0 26px}
+.action{border:0;background:white;padding:12px 4px;border-radius:16px;color:var(--text);font-weight:700;font-size:11px;box-shadow:0 2px 12px #18372808;cursor:pointer}
+.action .ico{width:38px;height:38px;border-radius:13px;background:var(--mint);color:var(--green);display:grid;place-items:center;margin:0 auto 8px;font-size:20px}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;margin:4px 0 12px}.sectionhead h2{font-size:17px;margin:0;letter-spacing:-.3px}.link{color:var(--green);font-size:12px;font-weight:800;border:0;background:none;cursor:pointer}
+.account{border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.accountleft{display:flex;align-items:center;gap:12px}.cardicon{width:44px;height:44px;border-radius:13px;background:#edf3ff;color:#315b9c;display:grid;place-items:center;font-size:20px}.account strong{display:block;font-size:14px}.account small{display:block;color:var(--muted);margin-top:5px;font-size:12px}.accountamt{font-weight:800}
+.transaction{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}.txicon{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#f0f4f1;font-size:18px;flex-shrink:0}.txinfo{flex:1;min-width:0}.txinfo strong{font-size:13px;display:block}.txinfo small{color:var(--muted);font-size:11px;display:block;margin-top:5px}.txamount{text-align:right;font-size:13px;font-weight:800;white-space:nowrap}.positive{color:var(--green)}.negative{color:var(--text)}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(460px,100%);display:grid;grid-template-columns:repeat(4,1fr);background:#ffffffef;backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:10px 8px max(10px,env(safe-area-inset-bottom));z-index:4}
+.nav{border:0;background:none;color:#85928b;font-size:10px;font-weight:700;display:grid;gap:5px;place-items:center;cursor:pointer}.nav span{font-size:20px}.nav.active{color:var(--green)}
+.notice{margin-top:22px;background:#f7faf8;border:1px dashed #b9cec2;border-radius:14px;padding:12px;color:#52665b;font-size:11px;line-height:1.5}
+.panel{display:none}.panel.active{display:block}.empty{padding:25px 8px;text-align:center;color:var(--muted);font-size:13px}
+button:focus-visible{outline:3px solid #8ad9b6;outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="demo">DEMO ONLY · NO REAL BANK ACCOUNT OR MONEY</div>
+<header><div class="brand"><div class="mark">M</div>MintPocket</div><div class="avatar">JD</div></header>
+<main>
+<section class="panel active" id="home">
+<div class="eyebrow">Good morning, Jordan</div><h1>Your money, at a glance.</h1><div class="sub">Here’s your fictional demo account overview.</div>
+<div class="balance"><div class="label">Demo available balance</div><div class="amount">$5,240.00</div><div class="balancefoot"><span>Sample account · USD</span><span class="pill">DEMO</span></div></div>
+<div class="actions">
+<button class="action" onclick="openMoney('send')"><div class="ico">↗</div>Send</button>
+<button class="action" onclick="openMoney('add')"><div class="ico">＋</div>Add money</button>
+<button class="action" onclick="openMoney('withdraw')"><div class="ico">↓</div>Withdraw</button>
+<button class="action" onclick="showPanel('cards')"><div class="ico">▤</div>Cards</button>
+</div>
+<div class="sectionhead"><h2>Your accounts</h2><button class="link" onclick="showPanel('accounts')">See all</button></div>
+<div class="account"><div class="accountleft"><div class="cardicon">▣</div><div><strong>Everyday spending</strong><small>•••• 2048 · Demo account</small></div></div><div class="accountamt">$5,240.00</div></div>
+<div class="sectionhead"><h2>Recent activity</h2><button class="link" onclick="showPanel('activity')">See all</button></div>
+<div id="recent"></div>
+<div class="notice">This is a fictional interface made for demonstration and fun. Balances and transactions are invented sample data; no money is held, sent, or received.</div>
+</section>
+<section class="panel" id="accounts"><div class="eyebrow">Overview</div><h1>Your accounts</h1><div class="sub">All balances shown are fictional.</div><div class="account" style="margin-top:22px"><div class="accountleft"><div class="cardicon">▣</div><div><strong>Everyday spending</strong><small>•••• 2048 · Demo account</small></div></div><div class="accountamt">$5,240.00</div></div><div class="notice">Demo balance only — not connected to a bank.</div></section>
+<section class="panel" id="activity"><div class="eyebrow">Sample ledger</div><h1>Activity</h1><div class="sub">Fictional transactions for preview only.</div><div id="alltx" style="margin-top:18px"></div></section>
+<section class="panel" id="cards"><div class="eyebrow">Cards</div><h1>Your demo card</h1><div style="margin-top:22px;background:linear-gradient(135deg,#132d24,#087e55);border-radius:22px;padding:22px;color:white;min-height:185px;display:flex;flex-direction:column;justify-content:space-between"><div style="display:flex;justify-content:space-between;font-weight:800"><span>MintPocket</span><span>DEMO</span></div><div style="font-size:20px;letter-spacing:2px">•••• &nbsp;•••• &nbsp;•••• &nbsp;2048</div><div style="display:flex;justify-content:space-between;font-size:12px"><span>JORDAN DEMO</span><span>NOT A REAL CARD</span></div></div><div class="notice">This is only a visual mockup. It is not a payment card and cannot be used to pay.</div></section>
+</main>
+<nav class="bottom">
+<button class="nav active" data-panel="home" onclick="showPanel('home')"><span>⌂</span>Home</button>
+<button class="nav" data-panel="accounts" onclick="showPanel('accounts')"><span>▣</span>Accounts</button>
+<button class="nav" data-panel="activity" onclick="showPanel('activity')"><span>↻</span>Activity</button>
+<button class="nav" data-panel="cards" onclick="showPanel('cards')"><span>▤</span>Cards</button>
+</nav>
+</div>
+<div id="toast" style="position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#14271e;color:white;padding:12px 16px;border-radius:12px;font-size:13px;display:none;z-index:20;max-width:90%;text-align:center"></div>
+<div id="moneyModal" style="display:none;position:fixed;inset:0;background:#071b1299;z-index:15;align-items:flex-end;justify-content:center;padding:12px">
+  <div style="background:white;width:min(460px,100%);border-radius:24px;padding:22px;margin:auto;box-shadow:0 20px 70px #0003">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <h2 id="moneyTitle" style="font-size:22px;margin:0">Add demo money</h2>
+      <button onclick="closeMoney()" aria-label="Close" style="border:0;background:#eef4f0;border-radius:50%;width:36px;height:36px;font-size:20px">×</button>
+    </div>
+    <p style="font-size:12px;color:#718078;margin:0 0 18px">Demo only. This does not move real money.</p>
+    <form id="moneyForm" onsubmit="submitMoney(event)">
+      <label for="moneyAmount" style="font-size:12px;font-weight:800;display:block;margin-bottom:7px">AMOUNT (USD)</label>
+      <input id="moneyAmount" type="number" min="0.01" max="1000000" step="0.01" required placeholder="0.00" style="width:100%;padding:14px;border:1px solid #d7e2db;border-radius:12px;font-size:18px;margin-bottom:14px">
+      <div id="recipientWrap" style="display:none">
+        <label for="recipient" style="font-size:12px;font-weight:800;display:block;margin-bottom:7px">RECIPIENT NAME OR PHONE</label>
+        <input id="recipient" maxlength="60" placeholder="e.g. Alex Demo" style="width:100%;padding:14px;border:1px solid #d7e2db;border-radius:12px;font-size:15px;margin-bottom:14px">
+      </div>
+      <button type="submit" style="width:100%;padding:15px;border:0;border-radius:14px;background:#087e55;color:white;font-weight:800;font-size:15px">Confirm demo transaction</button>
+    </form>
+    <div style="font-size:10px;color:#718078;text-align:center;margin-top:12px">FICTIONAL DEMO · NO REAL DEPOSITS OR TRANSFERS</div>
+  </div>
+</div>
+<script>
+let balance = 5240.00;
+let currentAction = "add";
+const txs=[
+ {icon:"🛍️",name:"Sample Market",date:"Today · 10:24 AM",amount:"−$42.80",kind:"negative"},
+ {icon:"💼",name:"Demo paycheck",date:"Yesterday · 9:00 AM",amount:"+$1,250.00",kind:"positive"},
+ {icon:"☕",name:"Corner Coffee",date:"Oct 9 · 8:16 AM",amount:"−$6.40",kind:"negative"},
+ {icon:"🎧",name:"Music subscription",date:"Oct 8 · 6:30 PM",amount:"−$10.99",kind:"negative"},
+ {icon:"↩️",name:"Sample refund",date:"Oct 7 · 1:05 PM",amount:"+$18.50",kind:"positive"},
+ {icon:"🚆",name:"City transport",date:"Oct 6 · 7:42 AM",amount:"−$12.00",kind:"negative"}
+];
+function row(t){return `<div class="transaction"><div class="txicon">${t.icon}</div><div class="txinfo"><strong>${t.name}</strong><small>${t.date} · Demo</small></div><div class="txamount ${t.kind}">${t.amount}</div></div>`}
+function moneyText(n){return n.toLocaleString("en-US",{style:"currency",currency:"USD"})}
+function renderTransactions(){
+ document.getElementById("recent").innerHTML=txs.slice(0,4).map(row).join("");
+ document.getElementById("alltx").innerHTML=txs.map(row).join("");
+}
+function renderBalance(){
+ document.querySelectorAll(".amount").forEach(el=>el.textContent=moneyText(balance));
+ document.querySelectorAll(".accountamt").forEach(el=>el.textContent=moneyText(balance));
+}
+function openMoney(action){
+ currentAction=action;
+ const titles={add:"Add demo money",withdraw:"Withdraw demo money",send:"Send demo money"};
+ document.getElementById("moneyTitle").textContent=titles[action];
+ document.getElementById("recipientWrap").style.display=action==="send"?"block":"none";
+ document.getElementById("recipient").required=action==="send";
+ document.getElementById("moneyAmount").value="";
+ document.getElementById("recipient").value="";
+ document.getElementById("moneyModal").style.display="flex";
+}
+function closeMoney(){document.getElementById("moneyModal").style.display="none"}
+function submitMoney(event){
+ event.preventDefault();
+ const input=document.getElementById("moneyAmount");
+ const amount=Math.round(Number(input.value)*100)/100;
+ const recipient=document.getElementById("recipient").value.trim();
+ if(!Number.isFinite(amount)||amount<=0){toast("Enter a valid demo amount.");return}
+ if(currentAction==="send"&&!recipient){toast("Enter a demo recipient name or phone.");return}
+ if((currentAction==="send"||currentAction==="withdraw")&&amount>balance){toast("Insufficient demo balance.");return}
+ let name,icon,kind,displayAmount;
+ if(currentAction==="add"){
+   balance+=amount;name="Demo money added";icon="＋";kind="positive";displayAmount="+"+moneyText(amount);
+ }else if(currentAction==="withdraw"){
+   balance-=amount;name="Demo cash withdrawal";icon="↓";kind="negative";displayAmount="−"+moneyText(amount);
+ }else{
+   balance-=amount;name="Demo send to "+recipient;icon="↗";kind="negative";displayAmount="−"+moneyText(amount);
+ }
+ const now=new Date();
+ const dateLabel="Just now · "+now.toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});
+ txs.unshift({icon,name,date:dateLabel,amount:displayAmount,kind});
+ renderBalance();renderTransactions();closeMoney();
+ toast("Demo transaction completed. No real money moved.");
+}
+function showPanel(id){document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav").forEach(n=>n.classList.toggle("active",n.dataset.panel===id));window.scrollTo({top:0,behavior:"smooth"})}
+let timer;function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.style.display="block";clearTimeout(timer);timer=setTimeout(()=>t.style.display="none",2600)}
+renderBalance();renderTransactions();
+</script>
+<script>
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js").catch(() => {}));
+}
+</script>
+</body></html>
